@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Login</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="login-page">  <!-- ✅ Background Applied -->
+
+    <div class="doctor-login-container">
+        <h2>Doctor Login</h2>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <p>{{ form.username.label }} {{ form.username() }}</p>
+            <p>{{ form.password.label }} {{ form.password() }}</p>
+            <p>{{ form.submit() }}</p>
+        </form>
+        <p>Don't have an account? <a href="{{ url_for('doctor_register') }}">Register here</a></p>
+        <a href="{{ url_for('role_choice') }}"><button class="btn-back">Back</button></a>
+    </div>
+
+</body>
+</html>

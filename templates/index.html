@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    
+    <script>
+        function fetchAvailableSlots() {
+            var doctor = document.getElementById("doctor").value;
+            var date = document.getElementById("date").value;
+            if (doctor && date) {
+                fetch(`/get_slots?doctor=${doctor}&date=${date}`)
+                .then(response => response.json())
+                .then(data => {
+                    let timeDropdown = document.getElementById("time");
+                    timeDropdown.innerHTML = "<option value=''>Select a Time</option>"; 
+                    if (data.length === 0) {
+                        let option = document.createElement("option");
+                        option.text = "No slots available";
+                        option.disabled = true;
+                        timeDropdown.add(option);
+                    } else {
+                        data.forEach(slot => {
+                            let option = document.createElement("option");
+                            option.value = slot;
+                            option.text = slot;
+                            timeDropdown.add(option);
+                        });
+                    }
+                });
+            }
+        }
+    </script>
+</head>
+<body class="home-page">
+
+    <div class="home-container">
+        <h1>📅 Book an Appointment</h1>
+        <p>Welcome, {{ current_user.username }}</p>
+
+        <!-- Show Confirmation Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <p class="flash-message">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Booking Form -->
+        <form method="POST" class="appointment-form">
+            {{ form.hidden_tag() }}
+
+            <div class="input-group">
+                <label>Doctor:</label>
+                {{ form.doctor(class="input-field", id="doctor", onchange="fetchAvailableSlots()") }}
+            </div>
+
+            <div class="input-group">
+                <label>Date:</label>
+                <input type="date" id="date" name="date" class="input-field" onchange="fetchAvailableSlots()" required>
+            </div>
+
+            <div class="input-group">
+                <label>Time:</label>
+                <select id="time" name="time" class="input-field">
+                    <option value="">Select a Time</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">📅 Book Appointment</button>
+        </form>
+
+        <!-- Show Confirmation & Download Receipt -->
+        {% if token_number %}
+            <div class="appointment-confirmation">
+                <h3>✅ Appointment Confirmed!</h3>
+                <p>Your appointment is successfully booked. Download your receipt below:</p>
+                <a href="{{ url_for('download_receipt', token_number=token_number) }}" class="btn btn-download">
+                    📄 Download Appointment Receipt
+                </a>
+            </div>
+        {% endif %}
+
+        <br>
+        <a href="{{ url_for('logout') }}" class="btn-back">⬅ Logout</a>
+    </div>
+
+</body>
+</html>

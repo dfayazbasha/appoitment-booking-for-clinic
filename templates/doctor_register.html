@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Doctor Dashboard{% endblock %}
+
+{% block content %}
+    <div class="dashboard-container">
+        <h1>Doctor Dashboard</h1>
+        <h2>Welcome, Dr. {{ current_user.username }}</h2>
+
+        {% if appointments %}
+            <h3>Upcoming Appointments:</h3>
+            <div class="appointment-list">
+                {% for appointment in appointments %}
+                    <div class="appointment-card">
+                        <p><strong>Date:</strong> {{ appointment.date }}</p>
+                        <p><strong>Time:</strong> {{ appointment.time.strftime('%I:%M %p') }}</p>
+                        <p><strong>Patient:</strong> {{ appointment.patient_name }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="no-appointments">No upcoming appointments.</p>
+        {% endif %}
+
+        <a href="{{ url_for('logout') }}"><button class="btn btn-logout">Logout</button></a>
+    </div>
+{% endblock %}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Doctor Dashboard</title>
+</head>
+<body>
+    <h1>Doctor Dashboard</h1>
+
+    <h2>Welcome, Dr. {{ current_user.username }}</h2>
+
+    {% if appointments %}
+        <h3>Upcoming Appointments (Sorted by Date & Time):</h3>
+        <ul>
+            {% for appointment in appointments %}
+                <li>
+                    <strong>Date:</strong> {{ appointment.date }} | 
+                    <strong>Time:</strong> {{ appointment.time.strftime('%I:%M %p') }} | 
+                    <strong>Patient:</strong> {{ appointment.patient_name }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No upcoming appointments.</p>
+    {% endif %}
+
+    <br>
+    <a href="{{ url_for('logout') }}"><button>Logout</button></a>
+</body>
+</html>

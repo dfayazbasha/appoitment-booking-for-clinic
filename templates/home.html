@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Book Appointment</title>
+
+    <!-- ✅ Background Image Styling -->
+    <style>
+
+        .home-page {
+            background: url("{{ url_for('static', filename='images/background.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            width:100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="home-page">  <!-- ✅ Apply Background -->
+
+    <div class="home-container">
+        <h1>Book an Appointment</h1>
+        <p>Welcome, {{ current_user.username }}</p>
+
+        <!-- ✅ Show Confirmation Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <p class="flash-message">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- ✅ Appointment Booking Form -->
+        <form method="POST" class="appointment-form">
+            {{ form.hidden_tag() }}
+
+            <div class="input-group">
+                <label>Doctor:</label>
+                {{ form.doctor(class="input-field") }}
+            </div>
+
+            <div class="input-group">
+                <label>Date:</label>
+                {{ form.date(class="input-field", id="date", onchange="fetchAvailableSlots()") }}
+            </div>
+
+            <div class="input-group">
+                <label>Time:</label>
+                <select id="time" name="time" class="input-field">
+                    <option value="">Select a Time</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Book Appointment</button>
+        </form>
+
+        <!-- ✅ Download Receipt Button -->
+        {% if session.get('token_number') %}
+    <a href="{{ url_for('download_receipt', token_number=session.get('token_number')) }}" class="btn btn-secondary">
+        📄 Download Receipt
+    </a>
+{% endif %}
+
+
+        <br>
+        <a href="{{ url_for('logout') }}" class="btn-back">⬅ Logout</a>
+    </div>
+
+    <script>
+        function fetchAvailableSlots() {
+            var doctor = document.getElementById("doctor").value;
+            var date = document.getElementById("date").value;
+            if (doctor && date) {
+                fetch(`/get_slots?doctor=${doctor}&date=${date}`)
+                .then(response => response.json())
+                .then(data => {
+                    let timeDropdown = document.getElementById("time");
+                    timeDropdown.innerHTML = "";
+                    if (data.length === 0) {
+                        let option = document.createElement("option");
+                        option.text = "No slots available";
+                        timeDropdown.add(option);
+                    } else {
+                        data.forEach(slot => {
+                            let option = document.createElement("option");
+                            option.value = slot;
+                            option.text = slot;
+                            timeDropdown.add(option);
+                        });
+                    }
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>

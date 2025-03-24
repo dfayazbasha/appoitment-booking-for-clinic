@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Role</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="role-page">  <!-- ✅ Background Applied -->
+
+    <div class="role-container">
+        <h1>Select Your Role</h1>
+
+        <div>
+            <a href="{{ url_for('doctor_choice') }}" class="role-box">Doctor</a>
+            <a href="{{ url_for('patient_choice') }}" class="role-box">Patient</a>
+        </div>
+    </div>
+
+</body>
+</html>

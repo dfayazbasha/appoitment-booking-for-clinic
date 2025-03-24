@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Doctor Portal</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="doctor-choice-page">  <!-- ✅ Apply Correct Class -->
+
+    <div class="container">
+        <h1>Doctor Portal</h1>
+        <h2>Login or Register</h2>
+
+        <div class="btn-container">
+            <a href="{{ url_for('doctor_login') }}">
+                <button class="btn btn-primary">Doctor Login</button>
+            </a>
+
+            <a href="{{ url_for('doctor_register') }}">
+                <button class="btn btn-secondary">Register as Doctor</button>
+            </a>
+        </div>
+
+        <br>
+        <a href="{{ url_for('role_choice') }}">
+            <button class="btn btn-back">Back</button>
+        </a>
+    </div>
+
+</body>
+</html>
